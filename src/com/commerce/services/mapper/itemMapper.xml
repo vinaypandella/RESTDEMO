@@ -3,6 +3,14 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.commerce.services.mapper.ItemMapper">
    
+    <select id="selectAllItems" resultMap="itemResultMap">
+    select ITM_STYL_CLR.STYL_CLR_NBR as styleColorNumber,
+    	   ITM_STYL_CLR.DESCRIPTION as description,
+    	   ITM_STYL_CLR.COLR as color,
+    	   ITM_STYL_CLR.STYLE as style,
+    	   ITM_STYL_CLR.PRICE as price from ITM_STYL_CLR
+    </select>
+   
     <select id="selectItems" parameterType="hashmap" resultMap="itemResultMap">
     select ITM_STYL_CLR.STYL_CLR_NBR as styleColorNumber,
     	   ITM_STYL_CLR.DESCRIPTION as description,

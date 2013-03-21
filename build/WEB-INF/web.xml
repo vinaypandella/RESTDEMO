@@ -8,11 +8,7 @@
         <param-name>contextConfigLocation</param-name>
         <param-value>/WEB-INF/applicationContext.xml</param-value>
     </context-param>
-    <context-param>
-        <param-name>spring.profiles.active</param-name>
-        <param-value>production</param-value>
-    </context-param>
-
+  
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
@@ -27,26 +23,5 @@
         <servlet-name>dispatcher</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
-
-    <resource-ref>
-        <res-ref-name>jdbc/sisDBro</res-ref-name>
-    </resource-ref>
-
-    <resource-ref>
-        <description>SIS DataSource</description>
-        <res-ref-name>jdbc/sisDBro</res-ref-name>
-        <res-type>com.mchange.v2.c3p0.ComboPooledDataSource</res-type>
-        <res-auth>Container</res-auth>
-    </resource-ref>
-
-    <filter>
-        <filter-name>cors</filter-name>
-        <filter-class>com.gap.commerce.services.filter.CORSFilter</filter-class>
-    </filter>
-
-    <filter-mapping>
-        <filter-name>cors</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
 
 </web-app>

@@ -1,6 +1,7 @@
 package com.commerce.dao.item;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
@@ -28,5 +29,21 @@ public class ItemRepository {
 
 	public int deleteItem(String styleColorNumber) {
 		return sqlSession.delete("deleteItem",styleColorNumber);
+	}
+	
+	public void deleteItems (List<Item> items) {
+		for (Item item : items) {
+			deleteItem(item.getStyleColorNumber());
+		}
+	}
+	
+	public List<Item> fetchAllItems () {
+		return sqlSession.selectList("selectAllItems");
+	}
+	
+	public void storeItems (List<Item> items) {
+		for (Item item : items) {
+			updatePrice(item);
+		}
 	}
 }
