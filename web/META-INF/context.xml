@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Context>
+    <Resource acquireIncrement="10"
+              auth="Container"
+              description="mysql data soruce for sis application"
+              driverClass="com.mysql.jdbc.Driver"
+              factory="org.apache.naming.factory.BeanFactory"
+              idleConnectionTestPeriod="60"
+              initialPoolSize="1"
+              jdbcUrl="jdbc:mysql://localhost:3306/items"
+              maxIdleTime="600"
+              maxPoolSize="100"
+              maxStatements="50"
+              minPoolSize="10"
+              name="jdbc/sisDBro"
+              password="dev"
+              type="com.mchange.v2.c3p0.ComboPooledDataSource"
+              user="dev"/>
+    <Loader loaderClass="org.springframework.instrument.classloading.tomcat.TomcatInstrumentableClassLoader"
+            useSystemClassLoaderAsParent="false"/>
+</Context>
