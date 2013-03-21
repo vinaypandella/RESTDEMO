@@ -4,7 +4,7 @@
 
     <property name="basedir" location="."/>
     <property name="source.dir" location="${basedir}/src"/>
-    <property name="mapper.dir" location="src/com/gap/commerce/services/mapper"/>
+    <property name="mapper.dir" location="src/com/commerce/services/mapper"/>
     <property name="config.dir" location="${basedir}/config"/>
     <property name="config.db.dir" location="${config.dir}/db"/>
     <property name="test.dir" location="test"/>
@@ -19,7 +19,7 @@
     <property name="build.dir" location="build"/>
     <property name="build.classes.dir" location="build/classes"/>
     <property name="build.classes.config.dir" location="${build.classes.dir}/config"/>
-    <property name="build.mapper.dir" location="${build.classes.dir}/com/gap/commerce/services/mapper"/>
+    <property name="build.mapper.dir" location="${build.classes.dir}/com/commerce/services/mapper"/>
     <property name="build.web-inf.dir" location="${build.dir}/WEB-INF"/>
 
     <property name="app.name" value="pricing-service"/>
