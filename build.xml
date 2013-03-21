@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+
+<project  name="pricing-service" >
+
+    <property name="basedir" location="."/>
+    <property name="source.dir" location="${basedir}/src"/>
+    <property name="mapper.dir" location="src/com/gap/commerce/services/mapper"/>
+    <property name="config.dir" location="${basedir}/config"/>
+    <property name="config.db.dir" location="${config.dir}/db"/>
+    <property name="test.dir" location="test"/>
+    <property name="lib.dir" location="lib"/>
+    <property name="lib.compile.dir" location="${lib.dir}/compile"/>
+    <property name="lib.runtime.dir" location="${lib.dir}/runtime"/>
+    <property name="lib.test.dir" location="${lib.dir}/test"/>
+    <property name="dist.dir" location="dist"/>
+    <property name="webinf.dir" location="web/WEB-INF/"/>
+    <property name="meta-inf.dir" location="web/META-INF/"/>
+
+    <property name="build.dir" location="build"/>
+    <property name="build.classes.dir" location="build/classes"/>
+    <property name="build.classes.config.dir" location="${build.classes.dir}/config"/>
+    <property name="build.mapper.dir" location="${build.classes.dir}/com/gap/commerce/services/mapper"/>
+    <property name="build.web-inf.dir" location="${build.dir}/WEB-INF"/>
+
+    <property name="app.name" value="pricing-service"/>
+    <property name="war.name" value="${app.name}.war"/>
+    <property name="build.war.location" location="${dist.dir}/${war.name}"/>
+
+    <property name="build.test.dir" location="${build.dir}/test"/>
+    <property name="build.test.classes.dir" location="${build.test.dir}/classes"/>
+    <property name="build.test.data.dir" location="${build.test.dir}/data"/>
+    <property name="build.test.reports.dir" location="${build.test.dir}/reports"/>
+
+    <property name="build.test.coverage.dir" location="${build.dir}/coverage"/>
+    <property name="cobertura.dir" location="${basedir}/lib/cobertura"/>
+    <property name="cobertura.ser" location="${basedir}/cobertura.ser"/>
+    <property name="dir.instrumented.out" value="${build.dir}/target/instrumented-classes"/>
+    <property environment="env"/>
+
+    <taskdef classpath="${lib.compile.dir}/ant-contrib.jar" resource="net/sf/antcontrib/antlib.xml"/>
+
+
+    <path id="compile.classpath">
+        <fileset dir="${lib.compile.dir}" includes="*.jar"/>
+    </path>
+
+    <path id="test.compile.classpath">
+        <path refid="compile.classpath"/>
+        <fileset dir="${lib.test.dir}" includes="*.jar"/>
+        <pathelement location="${build.classes.dir}"/>
+        <pathelement location="${build.classes.config.dir}"/>
+    </path>
+
+    <path id="test.classpath">
+        <path refid="test.compile.classpath"/>
+        <pathelement location="${build.test.classes.dir}"/>
+        <pathelement location="${build.web-inf.dir}"/>
+    </path>
+
+
+    <target name="clean" depends="clean-libs">
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+    </target>
+
+    <target name="clean-libs">
+        <delete dir="${lib.compile.dir}"/>
+        <delete dir="${lib.test.dir}"/>
+        <delete dir="${lib.runtime.dir}"/>
+    </target>
+
+    <target name="init" depends="clean">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${build.classes.dir}"/>
+        <mkdir dir="${build.classes.config.dir}"/>
+        <mkdir dir="${build.web-inf.dir}"/>
+        <mkdir dir="${build.dir}/target/instrumented-classes"/>
+        <mkdir dir="${dist.dir}"/>
+        <mkdir dir="${lib.compile.dir}"/>
+        <mkdir dir="${lib.runtime.dir}"/>
+        <mkdir dir="${lib.test.dir}"/>
+        <mkdir dir="${build.dir}/coverage"/>
+    </target>
+
+
+    <target name="test-init">
+        <delete dir="${build.test.dir}" failonerror="false"/>
+        <mkdir dir="${build.test.dir}"/>
+        <mkdir dir="${build.test.classes.dir}"/>
+        <mkdir dir="${build.test.data.dir}"/>
+        <mkdir dir="${build.test.reports.dir}"/>
+        <mkdir dir="${build.test.coverage.dir}"/>
+    </target>
+
+    <target name="compile" depends="init">
+        <javac destdir="${build.classes.dir}" debug="true" includeantruntime="true" includes="**/*.java">
+            <src location="${source.dir}"/>
+            <classpath refid="compile.classpath"/>
+        </javac>
+        <antcall target="copy-files"/>
+    </target>
+
+
+    <target name="copy-files" >
+        <copy todir="${build.dir}/WEB-INF" failonerror="false">
+            <fileset includes="*.xml" dir="web/WEB-INF"/>
+        </copy>
+        <copy todir="${build.mapper.dir}" failonerror="true">
+            <fileset includes="*.xml" dir="${mapper.dir}"/>
+        </copy>
+        <echo>Copying the environment file : ${environment}.properties</echo>
+    </target>
+
+    <target name="test-compile" depends="compile,test-init">
+        <javac destdir="${build.test.classes.dir}"
+               debug="true"
+               includeAntRuntime="true"
+               srcdir="test">
+            <classpath refid="test.compile.classpath"/>
+        </javac>
+    </target>
+
+    <target name="test-run" depends="test-compile">
+        <junit printsummary="true"
+               errorProperty="test.failed"
+               failureProperty="test.failed"
+               fork="true" forkmode="once"
+               haltonfailure="true"
+               haltonerror="true">
+            <jvmarg value="-Dnet.sourceforge.cobertura.datafile=${cobertura.ser}"/>
+            <classpath>
+                <path location="${build.dir}/target/instrumented-classes"/>
+                <path refid="test.classpath"/>
+                <path refid="cobertura.classpath"/>
+            </classpath>
+
+            <formatter type="brief" usefile="false"/>
+            <formatter type="xml"/>
+            <batchtest todir="${build.test.data.dir}">
+                <fileset dir="${build.test.classes.dir}" includes="**/*Test.class"/>
+            </batchtest>
+        </junit>
+    </target>
+
+    <target name="test-report" depends="test-run">
+        <junitreport todir="${build.test.data.dir}">
+            <fileset dir="${build.test.data.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames"
+                    todir="${build.test.reports.dir}"/>
+        </junitreport>
+        <fail if="test.failed">
+            Tests failed. Check ${test.reports.dir}
+        </fail>
+    </target>
+
+</project>
+
