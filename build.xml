@@ -64,9 +64,6 @@
     </target>
 
     <target name="clean-libs">
-        <delete dir="${lib.compile.dir}"/>
-        <delete dir="${lib.test.dir}"/>
-        <delete dir="${lib.runtime.dir}"/>
     </target>
 
     <target name="init" depends="clean">
@@ -127,11 +124,9 @@
                fork="true" forkmode="once"
                haltonfailure="true"
                haltonerror="true">
-            <jvmarg value="-Dnet.sourceforge.cobertura.datafile=${cobertura.ser}"/>
             <classpath>
                 <path location="${build.dir}/target/instrumented-classes"/>
                 <path refid="test.classpath"/>
-                <path refid="cobertura.classpath"/>
             </classpath>
 
             <formatter type="brief" usefile="false"/>

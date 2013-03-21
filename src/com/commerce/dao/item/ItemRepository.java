@@ -21,6 +21,12 @@ public class ItemRepository {
 		criteriaMap.put("styleColorNumber", styleColorNumber);
 		return sqlSession.selectOne("selectItems", criteriaMap);
 	}
-	
 
+	public int updatePrice (Item item){
+		return sqlSession.insert("insertOrUpdateItem", item);
+	}
+
+	public int deleteItem(String styleColorNumber) {
+		return sqlSession.delete("deleteItem",styleColorNumber);
+	}
 }

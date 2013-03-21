@@ -10,6 +10,24 @@
     	   ITM_STYL_CLR.STYLE as style,
     	   ITM_STYL_CLR.PRICE as price from ITM_STYL_CLR where  ITM_STYL_CLR.STYL_CLR_NBR = #{styleColorNumber}
     </select>
+    
+    <insert id="insertOrUpdateItem">
+        insert into ITM_STYL_CLR
+        (
+        STYL_CLR_NBR,DESCRIPTION,COLR,STYLE,PRICE
+        )
+        values
+        (
+        #{styleColorNumber},#{description},#{color},#{style},#{price}
+        )
+        on duplicate key update
+            DESCRIPTION=#{description},COLR=#{color},
+            STYLE=#{style},PRICE=#{price}
+    </insert>
+    
+    <delete id="deleteItem" parameterType="hashMap">
+    	delete from ITM_STYL_CLR where STYL_CLR_NBR = #{styleColorNumber}
+    </delete>
 
    
     <resultMap id="itemResultMap" type="com.commerce.model.item.Item">

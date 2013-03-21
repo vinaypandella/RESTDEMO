@@ -25,7 +25,7 @@
         </bean>
     </mvc:interceptors>
 
-    <bean id="genericExceptionResolver" class="com.gap.commerce.services.controller.errors.GenericExceptionResolver">
+    <bean id="genericExceptionResolver" class="com.commerce.GenericExceptionResolver">
         <constructor-arg name="globalExceptionHandler" ref="globalExceptionHandler"/>
         <property name="messageConverters">
             <list>
