@@ -154,6 +154,18 @@
             Tests failed. Check ${test.reports.dir}
         </fail>
     </target>
+	
+	<target name="package" depends="compile">
+	    <copy file="${basedir}/svn_revision" todir="${build.classes.dir}" failonerror="false"/>
+	    <war destfile="${build.war.location}" update="true">
+	        <classes dir="${build.classes.dir}"/>
+	        <zipfileset dir="${lib.runtime.dir}" prefix="WEB-INF/lib">
+	            <include name="*.jar"/>
+	        </zipfileset>
+	        <zipfileset dir="${build.web-inf.dir}" prefix="WEB-INF"/>
+	    </war>
+	    <checksum file="${build.war.location}"/>
+	</target>
 
 </project>
 
