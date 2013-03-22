@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
+
+    <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%-5p %d{dd-MMM HH:mm:ss} (%F) : %m \n"/>
+        </layout>
+    </appender>
+
+    <appender name="pricing-service" class="org.apache.log4j.DailyRollingFileAppender">
+        <errorHandler class="org.apache.log4j.varia.FallbackErrorHandler">
+            <root-ref/>
+            <appender-ref ref="CONSOLE"/>
+        </errorHandler>
+        <param name="File" value="${catalina.base}/logs/itempricing-service.log"/>
+        <param name="Append" value="true"/>
+        <param name="DatePattern" value="'.'yyyy-MM-dd-HH"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%-5p %d{dd-MMM HH:mm:ss} (%F) : %m \n"/>
+        </layout>
+    </appender>
+
+    <logger name="org.apache.ibatis">
+        <level value="debug"/>
+        <appender-ref ref="pricing-service"/>
+    </logger>
+
+    <logger name="java.sql">
+        <level value="debug"/>
+        <appender-ref ref="pricing-service"/>
+    </logger>
+
+    <logger name="java.sql.Statement">
+        <level value="debug"/>
+        <appender-ref ref="pricing-service"/>
+    </logger>
+
+    <logger name="org.springframework">
+        <level value="ERROR"/>
+        <appender-ref ref="pricing-service"/>
+    </logger>
+
+    <logger name="com.gap">
+        <level value="DEBUG"/>
+        <appender-ref ref="pricing-service"/>
+    </logger>
+</log4j:configuration>
