@@ -1,7 +1,10 @@
 <?xml version="1.0"?>
 
 <project  name="pricing-service" >
-
+	<condition property="environment" value="${ENV}" else="development">
+	        <isset property="ENV"/>
+	    </condition>
+    <property environment="env"/>
     <property name="basedir" location="."/>
     <property name="source.dir" location="${basedir}/src"/>
     <property name="mapper.dir" location="src/com/commerce/services/mapper"/>
@@ -22,7 +25,7 @@
     <property name="build.mapper.dir" location="${build.classes.dir}/com/commerce/services/mapper"/>
     <property name="build.web-inf.dir" location="${build.dir}/WEB-INF"/>
 
-    <property name="app.name" value="pricing-service"/>
+    <property name="app.name" value="item-service"/>
     <property name="war.name" value="${app.name}.war"/>
     <property name="build.war.location" location="${dist.dir}/${war.name}"/>
 
@@ -151,15 +154,57 @@
     </target>
 	
 	<target name="package" depends="compile">
-	    <copy file="${basedir}/svn_revision" todir="${build.classes.dir}" failonerror="false"/>
-	    <war destfile="${build.war.location}" update="true">
+	    <copy file="${webinf.dir}/web.xml" tofile="${build.web-inf.dir}/web.xml" overwrite="true"/>
+	    <copy file="${webinf.dir}/mvc-config.xml" tofile="${build.web-inf.dir}/mvc-config.xml" overwrite="true"/>
+	    <copy file="${webinf.dir}/database-config.xml" tofile="${build.web-inf.dir}/database-config.xml" overwrite="true"/>
+	    <copy file="${webinf.dir}/dispatcher-servlet.xml" tofile="${build.web-inf.dir}/dispatcher-servlet.xml"
+	          overwrite="true"/>
+	    <copy file="${webinf.dir}/applicationContext.xml" tofile="${build.web-inf.dir}/applicationContext.xml"
+	          overwrite="true"/>
+	    <copy file="${basedir}/svn_revision" todir="${build.classes.config.dir}" failonerror="false"/>
+	    <copy file="${webinf.dir}/log4j.xml" tofile="${build.classes.dir}/log4j.xml" overwrite="true"/>
+	    <war destfile="${build.war.location}" webxml="${build.web-inf.dir}/web.xml">
+	        <lib dir="${lib.runtime.dir}">
+	            <exclude name="*sources*.jar"/>
+	            <include name="**/*.jar"/>
+	            <exclude name="ant*.*"/>
+	            <exclude name="license*.txt"/>
+	        </lib>
+	    	 <lib dir="${lib.compile.dir}">
+	    		            <exclude name="*sources*.jar"/>
+	    		            <include name="**/*.jar"/>
+	    		            <exclude name="ant*.*"/>
+	    		            <exclude name="license*.txt"/>
+	    	</lib>
 	        <classes dir="${build.classes.dir}"/>
-	        <zipfileset dir="${lib.runtime.dir}" prefix="WEB-INF/lib">
-	            <include name="*.jar"/>
-	        </zipfileset>
-	        <zipfileset dir="${build.web-inf.dir}" prefix="WEB-INF"/>
+	        <classes dir="${build.classes.config.dir}"/>
+	        <webinf dir="${build.web-inf.dir}"/>
 	    </war>
 	    <checksum file="${build.war.location}"/>
+	</target>
+	
+	<target name="start-tomcat">
+	<echo message="Starting tomcat at /home/vinay/Downloads/apache-tomcat-6.0.36"/>
+	<exec executable="/home/vinay/Downloads/apache-tomcat-6.0.36/bin/startup.sh"/>
+	<waitfor maxwait="120" maxwaitunit="second" checkevery="10" timeoutproperty="tomcat-start-failed">
+	    <http url="http://localhost:8080/"/>
+	</waitfor>
+	<sleep seconds="5"/>
+	<fail message="Failed to start tomcat, check db issues if any" if="tomcat-start-failed"/>
+	</target>
+
+	<target name="stop-tomcat">
+	<java jar="/home/vinay/Downloads/apache-tomcat-6.0.36/bin/bootstrap.jar" fork="true">
+	    <arg value="stop"/>
+	    <jvmarg value="-Dcatalina.home=/home/vinay/Downloads/apache-tomcat-6.0.36"/>
+	</java>
+	</target>
+
+	<target name="build-deploy" depends="stop-tomcat,package">
+	<delete dir="/home/vinay/Downloads/apache-tomcat-6.0.36/webapps/${app.name}"/>
+	<delete file="/home/vinay/Downloads/apache-tomcat-6.0.36/webapps/${war.name}"/>
+	<copy file="${basedir}/dist/${war.name}" todir="/home/vinay/Downloads/apache-tomcat-6.0.36/webapps" overwrite="true"/>
+	<antcall target="start-tomcat"/>
 	</target>
 
 </project>

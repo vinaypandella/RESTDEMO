@@ -14,7 +14,7 @@
             <root-ref/>
             <appender-ref ref="CONSOLE"/>
         </errorHandler>
-        <param name="File" value="${catalina.base}/logs/pricing-service.log"/>
+        <param name="File" value="${catalina.base}/logs/itempricing-service.log"/>
         <param name="Append" value="true"/>
         <param name="DatePattern" value="'.'yyyy-MM-dd-HH"/>
         <layout class="org.apache.log4j.PatternLayout">

@@ -67,7 +67,7 @@ public class ItemRepositoryTest extends SpringTestContext{
 	@Test
 	public void shouldInsertAllItems () {
 		Item item1 = buildItem("125d34456", "MENS SOCKS", "RED", "swe", 20);
-		Item item2 = buildItem("12th34456", "MENS SOCKS", "RED", "swe", 20);
+		Item item2 = buildItem("12th34956", "MENS SOCKS", "RED", "swe", 20);
 		List<Item> items = new ArrayList<Item>();
 		items.add(item2);
 		items.add(item1);
@@ -76,15 +76,15 @@ public class ItemRepositoryTest extends SpringTestContext{
 		assertNotNull(items);
 		assertEquals(2, items.size());
 		assertEquals(true, ( items.get(0).getStyleColorNumber().equals("125d34456") || items.get(1).getStyleColorNumber().equals("125d34456") ));
-		assertEquals(true, ( items.get(0).getStyleColorNumber().equals("12th34456") || items.get(1).getStyleColorNumber().equals("12th34456") ));
+		assertEquals(true, ( items.get(0).getStyleColorNumber().equals("12th34956") || items.get(1).getStyleColorNumber().equals("12th34956") ));
 		
 	}
 	@Test
 	public void shouldDeleteAllitems () {
-		createNewItem("3434456", "MENS SOCKS", "RED", "swe", 20);
-		createNewItem("2w336756", "MENS SOCKS", "RED", "swe", 20);
-		Item item1 = buildItem("3434456", "MENS SOCKS", "RED", "swe", 20);
-		Item item2 = buildItem("2w336756", "MENS SOCKS", "RED", "swe", 20);
+		createNewItem("343448956", "MENS SOCKS", "RED", "swe", 20);
+		createNewItem("2w33675690", "MENS SOCKS", "RED", "swe", 20);
+		Item item1 = buildItem("343448956", "MENS SOCKS", "RED", "swe", 20);
+		Item item2 = buildItem("2w33675690", "MENS SOCKS", "RED", "swe", 20);
 		List<Item> items = new ArrayList<Item>();
 		items.add(item2);
 		items.add(item1);
