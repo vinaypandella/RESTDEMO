@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.commerce.RecordNotFoundException;
 import com.commerce.model.item.Item;
+import com.commerce.model.item.Items;
 import com.commerce.services.ItemService;
 
 @Controller
@@ -26,17 +28,43 @@ public class ItemController {
 	
     private static final Logger LOGGER = Logger.getLogger(ItemController.class);
 	
-	@RequestMapping(value = "items/item/{styleColorNumber}", method = RequestMethod.GET)
-    @ResponseBody
-	public Item getItem (@PathVariable String styleColorNumber) {
-		LOGGER.info("in controller...");
-		return itemService.getItem(styleColorNumber);
-	}
-	
+    
 	@RequestMapping(value = "items", method = RequestMethod.GET)
     @ResponseBody
 	public List<Item> getAllItems () {
 		return itemService.getItems();
+	}
+	
+	@RequestMapping(value = "items", method = RequestMethod.DELETE)
+    @ResponseBody
+	public void deleteItems (@RequestBody Items items) {
+		itemService.deleteItems(items);
+	}
+	
+	@RequestMapping(value = "items", method = POST)
+    @ResponseBody
+	public List<Item> createItems (@RequestBody Items items) {
+		return itemService.updateItems(items);
+	}
+	
+
+	@RequestMapping(value = "items", method = PUT)
+    @ResponseBody
+	public List<Item> replaceItems (@RequestBody Items items) {
+		return itemService.replaceItems(items);
+	}
+	
+	@RequestMapping(value = "items/item/{styleColorNumber}", method = RequestMethod.DELETE)
+    @ResponseBody
+	public int deleteItem (@PathVariable String styleColorNumber) {
+		return itemService.deleteItem(styleColorNumber);
+	}
+	
+	@RequestMapping(value = "items/item/{styleColorNumber}", method = RequestMethod.GET)
+    @ResponseBody
+	public Item getItem (@PathVariable String styleColorNumber) throws RecordNotFoundException {
+		LOGGER.info("in controller...");
+		return itemService.getItem(styleColorNumber);
 	}
 	
 	@RequestMapping(value = "items/createitem", method = POST)
@@ -45,11 +73,18 @@ public class ItemController {
 		return itemService.createItem(item);
 	}
 	
-	@RequestMapping(value = "items/createitems", method = POST)
+	
+	@RequestMapping(value = "items/item", method = PUT)
     @ResponseBody
-	public List<Item> createItems (@RequestBody List<Item> items) {
-		return itemService.updateItems(items);
+	public Item updateItem (@RequestBody Item item) {
+		return itemService.createItem(item);
 	}
+	
+	
+	
+	
+
+	
 	
 	
 }

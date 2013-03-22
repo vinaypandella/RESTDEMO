@@ -5,9 +5,21 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
 
+  <bean id="objectMapper" class="org.codehaus.jackson.map.ObjectMapper">
+        <property name="serializationConfig.dateFormat">
+            <bean class="java.text.SimpleDateFormat">
+                <constructor-arg>
+                    <value>dd-MM-yyyy HH:mm:ss</value>
+                </constructor-arg>
+            </bean>
+        </property>
+    </bean>
 
     <bean id="jsonConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
         <property name="supportedMediaTypes" value="application/json"/>
+        <property name="objectMapper">
+            <ref bean="objectMapper"/>
+        </property>
     </bean>
 
     <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">

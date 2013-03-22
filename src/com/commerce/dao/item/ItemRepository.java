@@ -28,7 +28,9 @@ public class ItemRepository {
 	}
 
 	public int deleteItem(String styleColorNumber) {
-		return sqlSession.delete("deleteItem",styleColorNumber);
+		Map<String, String> criteriaMap = new HashMap<String, String>();
+		criteriaMap.put("styleColorNumber", styleColorNumber);
+		return sqlSession.delete("deleteItem",criteriaMap);
 	}
 	
 	public void deleteItems (List<Item> items) {
@@ -42,6 +44,7 @@ public class ItemRepository {
 	}
 	
 	public void storeItems (List<Item> items) {
+		
 		for (Item item : items) {
 			updatePrice(item);
 		}

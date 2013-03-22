@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.commerce.RecordNotFoundException;
 import com.commerce.dao.item.ItemRepository;
 import com.commerce.model.item.Item;
 
@@ -14,8 +15,12 @@ public class ItemService {
 	@Autowired
 	ItemRepository itemRepository;
 	
-	public Item getItem(String styleColorNumber) {
-		return itemRepository.fetchItem(styleColorNumber);
+	public Item getItem(String styleColorNumber) throws RecordNotFoundException {
+		Item item = itemRepository.fetchItem(styleColorNumber);
+		if(null == item) {
+			throw new RecordNotFoundException();
+		}
+		return item;
 	}
 	
 	public Item createItem(Item item) {
